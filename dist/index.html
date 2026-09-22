@@ -64,6 +64,16 @@
           <div class="frame-wrap">
             <div class="frame-loading" id="frame-loading"><span class="loader"></span><span>Connecting to your lab…</span></div>
             <iframe id="lab-frame" title="Flightlab training lab" src="about:blank"></iframe>
+            <div class="frame-fallback" id="frame-fallback" hidden>
+              <div class="fallback-card">
+                <span class="fallback-icon">↗</span>
+                <div>
+                  <strong>Open this lab separately</strong>
+                  <p>The published hub keeps the tabs together, while each private lab handles its own sign-in. Your localhost hub embeds all three labs directly.</p>
+                  <a id="fallback-link" href="#" target="_blank" rel="noopener">Open the active lab ↗</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

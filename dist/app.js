@@ -27,6 +27,8 @@
   const stageSubtitle = document.getElementById('stage-subtitle');
   const stageStatus = document.getElementById('stage-status');
   const openSeparately = document.getElementById('open-separately');
+  const fallback = document.getElementById('frame-fallback');
+  const fallbackLink = document.getElementById('fallback-link');
   const progressCopy = document.getElementById('progress-copy');
   const envChip = document.getElementById('environment-chip');
   const footerMode = document.getElementById('footer-mode');
@@ -56,9 +58,16 @@
     stageName.textContent = lab.label;
     stageSubtitle.textContent = lab.subtitle;
     openSeparately.href = localHost ? lab.local : lab.hosted;
+    fallbackLink.href = localHost ? lab.local : lab.hosted;
     frame.title = lab.label + ' training lab';
     frame.src = localHost ? lab.local : lab.hosted;
     progressCopy.textContent = 'Practicing in ' + lab.label;
+    if (localHost) {
+      fallback.hidden = true;
+    } else {
+      fallback.hidden = false;
+      loading.classList.add('is-hidden');
+    }
     if (writeHistory) history.replaceState(null, '', '#' + id);
     try { localStorage.setItem('interviewos-active-lab', id); } catch (_) {}
   }
