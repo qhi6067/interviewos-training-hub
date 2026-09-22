@@ -29,11 +29,20 @@
         <h1>Build the integration<br /><em>muscle memory.</em></h1>
         <p class="hero-copy">Move from drone operations to API integrations to system design without leaving your practice flow.</p>
         <div class="hero-meta">
-          <span><b class="pulse-dot"></b> labs connected</span>
+          <span id="health-summary"><b class="pulse-dot"></b><span id="health-summary-text">checking labs</span></span>
           <span class="meta-divider"></span>
           <span id="progress-copy">Choose a lab to begin</span>
         </div>
       </section>
+
+      <nav class="mode-switcher" aria-label="Practice modes" role="tablist">
+        <button class="mode-tab is-active" role="tab" aria-selected="true" aria-controls="view-deck" data-mode="deck"><span>01</span><strong>Lab deck</strong><small>Run the three simulators</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-progress" data-mode="progress"><span>02</span><strong>Progress</strong><small>See what to practice next</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-capstone" data-mode="capstone"><span>03</span><strong>Capstone</strong><small>Trace one integration end to end</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-interview" data-mode="interview"><span>04</span><strong>Interview room</strong><small>Practice answers out loud</small></button>
+      </nav>
+
+      <section class="practice-view" id="view-deck" data-view="deck">
 
       <section class="workspace" aria-label="Training labs">
         <div class="workspace-head">
@@ -84,6 +93,39 @@
         <div class="how-icon">◉</div>
         <div><div class="section-kicker">THE FLOW</div><h2>One menu, three practice loops</h2><p>The hub keeps the labs together. Use Flightlab to rehearse C2 and WebSocket decisions, RESTcraft for request and integration fluency, then SystemForge to explain the larger architecture.</p></div>
         <div class="flow-steps"><div><span>01</span><b>Learn</b><small>Read the brief</small></div><div><span>02</span><b>Build</b><small>Try the simulator</small></div><div><span>03</span><b>Explain</b><small>Practice aloud</small></div></div>
+      </section>
+
+      </section>
+
+      <section class="practice-view" id="view-progress" data-view="progress" hidden>
+        <div class="view-heading"><div><div class="section-kicker">UNIFIED SIGNALS</div><h2>Progress you can explain</h2><p>Track the practice that matters across all three labs. These checkmarks stay in this browser.</p></div><button class="quiet-button" id="reset-progress" type="button">Reset progress</button></div>
+        <div class="metrics-grid">
+          <article class="metric-card"><span class="metric-label">MISSIONS COMPLETE</span><strong id="metric-missions">0 / 9</strong><small>Across the three labs</small></article>
+          <article class="metric-card"><span class="metric-label">PRACTICE TIME</span><strong id="metric-time">0m</strong><small>Time with InterviewOS open</small></article>
+          <article class="metric-card"><span class="metric-label">CAPSTONE</span><strong id="metric-capstone">Not started</strong><small>Telemetry to architecture</small></article>
+          <article class="metric-card"><span class="metric-label">ANSWER SCORE</span><strong id="metric-score">—</strong><small>Latest mock interview rubric</small></article>
+        </div>
+        <div class="progress-layout">
+          <article class="panel-card mission-card"><div class="panel-card-head"><div><div class="section-kicker">PRACTICE BOARD</div><h3>Small wins compound</h3></div><span class="panel-count" id="mission-count">0 / 9</span></div><div id="mission-list" class="mission-list"></div></article>
+          <aside class="panel-card next-card"><div class="section-kicker">RECOMMENDED NEXT</div><h3 id="next-lesson-title">Start with Flightlab</h3><p id="next-lesson-copy">Start telemetry, follow one message, then explain what the C2 subscriber needs.</p><button class="primary-button" id="next-lesson-button" type="button">Open next lesson →</button><div class="weak-topics"><span class="section-kicker">WEAK TOPICS</span><div id="weak-topics-list"><span class="topic-pill">WebSockets</span><span class="topic-pill">Retries</span><span class="topic-pill">Estimates</span></div></div></aside>
+        </div>
+        <article class="panel-card health-card"><div class="panel-card-head"><div><div class="section-kicker">LOCAL RUNTIME</div><h3>Lab health checks</h3></div><button class="quiet-button" id="refresh-health" type="button">Refresh now</button></div><p class="health-note" id="health-note">Checking local ports…</p><div class="health-grid" id="health-grid"></div></article>
+      </section>
+
+      <section class="practice-view" id="view-capstone" data-view="capstone" hidden>
+        <div class="view-heading"><div><div class="section-kicker">END-TO-END DRILL · 20 MIN</div><h2>Telemetry to a system you can defend</h2><p>Run one event through the integration chain, then inject the failure an interviewer asks about.</p></div><span class="scenario-badge"><i></i> simulated environment</span></div>
+        <div class="capstone-layout">
+          <div class="capstone-main panel-card"><div class="pipeline" id="capstone-pipeline"><div class="pipeline-node" data-node="0"><span>01</span><b>Sensor feed</b><small>produce track</small></div><div class="pipeline-arrow">→</div><div class="pipeline-node" data-node="1"><span>02</span><b>WebSocket / C2</b><small>publish telemetry</small></div><div class="pipeline-arrow">→</div><div class="pipeline-node" data-node="2"><span>03</span><b>REST adapter</b><small>validate + authorize</small></div><div class="pipeline-arrow">→</div><div class="pipeline-node" data-node="3"><span>04</span><b>Webhook</b><small>notify downstream</small></div><div class="pipeline-arrow">→</div><div class="pipeline-node" data-node="4"><span>05</span><b>System design</b><small>scale + defend</small></div></div><div class="capstone-toolbar"><button class="primary-button" id="capstone-next" type="button">Run next event →</button><button class="secondary-button" id="capstone-run-all" type="button">Run full chain</button><button class="quiet-button" id="capstone-reset" type="button">Reset</button><span class="capstone-score" id="capstone-score">0 / 5 stages</span></div><div class="event-stream" id="capstone-log" aria-live="polite"><div class="empty-log">Run the first event to start the trace.</div></div></div>
+          <aside class="panel-card fault-card"><div class="section-kicker">FAILURE INJECTION</div><h3>Make the happy path earn its trust</h3><p>Arm one or more faults, then run the chain again. Watch the recovery evidence appear in the event stream.</p><div class="fault-list"><label><input type="checkbox" data-fault="token" /> Expired bearer token <small>401 → refresh → retry</small></label><label><input type="checkbox" data-fault="disconnect" /> WebSocket drop <small>reconnect + resubscribe</small></label><label><input type="checkbox" data-fault="duplicate" /> Duplicate telemetry <small>idempotency guard</small></label><label><input type="checkbox" data-fault="rate" /> API rate limit <small>429 → backoff</small></label><label><input type="checkbox" data-fault="queue" /> Queue delay <small>freshness budget</small></label><label><input type="checkbox" data-fault="outage" /> Downstream outage <small>dead-letter + replay</small></label></div><div class="fault-tip"><span>INTERVIEW PHRASE</span><b id="capstone-phrase">“I separate transport success from application success.”</b></div></aside>
+        </div>
+      </section>
+
+      <section class="practice-view" id="view-interview" data-view="interview" hidden>
+        <div class="view-heading"><div><div class="section-kicker">MOCK INTERVIEW · 15 MIN</div><h2>Say the answer before you write it</h2><p>Choose a prompt, start the clock, answer by voice or text, then score the explanation against the rubric.</p></div><span class="timer-display" id="interview-timer">15:00</span></div>
+        <div class="interview-layout">
+          <article class="panel-card interview-main"><div class="prompt-picker" id="prompt-picker"></div><div class="prompt-label">INTERVIEW PROMPT</div><h3 id="interview-question">Design an integration that sends drone telemetry to a C2 dashboard. Where do WebSockets, REST, and retries fit?</h3><div class="follow-up" id="interview-followup">Follow-up: What happens when the operator reconnects after missing ten seconds of telemetry?</div><div class="interview-controls"><button class="primary-button" id="interview-start" type="button">Start timer</button><button class="secondary-button" id="interview-next" type="button">Next prompt</button><button class="quiet-button" id="interview-reset" type="button">Reset answer</button></div><div class="answer-label"><span>YOUR ANSWER</span><button class="voice-button" id="voice-answer" type="button">● Use voice</button></div><textarea id="interview-answer" rows="8" placeholder="State assumptions, name the flow, then explain failure and tradeoffs…"></textarea><div class="voice-status" id="voice-status">Voice input uses your browser’s speech recognition when available.</div><button class="save-answer" id="save-answer" type="button">Save answer + score →</button></article>
+          <aside class="panel-card rubric-card"><div class="section-kicker">ANSWER RUBRIC</div><h3>Would a teammate trust this explanation?</h3><div class="rubric-list"><label><span>Clarity</span><output id="rubric-clarity-value">3 / 5</output><input type="range" min="1" max="5" value="3" data-rubric="clarity" /></label><label><span>Technical accuracy</span><output id="rubric-accuracy-value">3 / 5</output><input type="range" min="1" max="5" value="3" data-rubric="accuracy" /></label><label><span>Tradeoffs</span><output id="rubric-tradeoffs-value">3 / 5</output><input type="range" min="1" max="5" value="3" data-rubric="tradeoffs" /></label><label><span>Failure handling</span><output id="rubric-failure-value">3 / 5</output><input type="range" min="1" max="5" value="3" data-rubric="failure" /></label></div><div class="score-total"><span>AVERAGE</span><strong id="rubric-average">3.0 / 5</strong></div><div class="answer-history" id="answer-history"><span class="section-kicker">SAVED ANSWERS</span><p>No answer saved yet.</p></div></aside>
+        </div>
       </section>
 
       <footer><span>INTERVIEWOS</span><span>Made for your 9 Mothers interview prep</span><span>LOCAL TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
