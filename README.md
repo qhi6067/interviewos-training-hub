@@ -12,7 +12,13 @@ Double-click **Start Interview Hub.cmd**. It checks the three lab servers, start
 
 Use **Stop Interview Hub.cmd** when you are finished. The hub remembers the last selected lab in this browser.
 
-The tabs use the local labs while running on `127.0.0.1`, so each simulator remains interactive inside the hub. The published version points its panels at the three private hosted labs; if a hosted panel asks for sign-in, use its **Open separately** link.
+SystemForge is bundled at `/systemforge/` and opens inside the hub on localhost and Vercel. Its Network essentials page is the default when selecting the lab. Flightlab and RESTcraft use their local servers on localhost and their private published links on Vercel; use **Open separately** for those private pages.
+
+## Network & cloud lessons
+
+SystemForge includes 10 lessons: DNS, IP/ports/routing, TCP/UDP/TLS/HTTP versions, REST/SOAP/gRPC APIs, WebSockets/SSE/polling, load balancing, AWS VPC/security/IAM, Lambda and queued work, delivery guarantees/caches, and troubleshooting/observability. Each has an accessible SVG diagram with selectable components, explanations, an interview prompt, sample answer, browser-saved notes, a knowledge check, and a primary reference.
+
+The standalone source is in the sibling `systemforge/dist` project. After editing it, run `node scripts/sync-systemforge.mjs` to copy its six public assets into this repository. The committed bundle deploys without needing that sibling checkout. Nested assets use relative URLs, and no Sites manifest or private files are copied. SystemForge notes use `systemforge-network-v1`; existing lab and coding progress keys remain separate. Previous progress from a different website origin does not automatically transfer.
 
 ## Practice modes
 

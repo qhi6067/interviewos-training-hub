@@ -5,7 +5,7 @@
   const labs = {
     flightlab: { label: 'Flightlab', subtitle: 'Drone integrations', local: 'http://127.0.0.1:4317/?mode=browser', hosted: 'https://flightlab-nine-mothers-jp.jaime123perez43.chatgpt.site/' },
     restcraft: { label: 'RESTcraft', subtitle: 'API integrations', local: 'http://127.0.0.1:4321/', hosted: 'https://restcraft-api-lab-jp.jaime123perez43.chatgpt.site/' },
-    systemforge: { label: 'SystemForge', subtitle: 'System design', local: 'http://127.0.0.1:4322/', hosted: 'https://systemforge-interview-lab-jp.jaime123perez43.chatgpt.site/' }
+    systemforge: { label: 'SystemForge', subtitle: 'System design · Network & cloud', bundled: './systemforge/#network' }
   };
   const missionCatalog = [
     { lab: 'flightlab', label: 'Flightlab', items: [['Start telemetry', 'Produce the first synthetic track.'], ['Trace a C2 message', 'Follow a track from sensor to subscriber.'], ['Explain WebSocket recovery', 'Describe reconnect and resubscribe behavior.']] },
@@ -64,17 +64,19 @@
   }
   function setLab(id, writeHistory) {
     const lab = labs[id] || labs.flightlab;
+    const target = lab.bundled || (localHost ? lab.local : lab.hosted);
+    const embedded = Boolean(lab.bundled) || localHost;
     document.querySelectorAll('.lab-tab').forEach((tab) => { const active = tab.dataset.lab === id; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; });
     loading.classList.remove('is-hidden');
-    stageStatus.textContent = localHost ? 'Connecting to lab…' : 'Private lab · may need sign-in';
+    stageStatus.textContent = embedded ? 'Connecting to lab…' : 'Private lab · may need sign-in';
     stageName.textContent = lab.label;
     stageSubtitle.textContent = lab.subtitle;
-    openSeparately.href = localHost ? lab.local : lab.hosted;
-    fallbackLink.href = localHost ? lab.local : lab.hosted;
+    openSeparately.href = target;
+    fallbackLink.href = target;
     frame.title = lab.label + ' training lab';
-    frame.src = localHost ? lab.local : lab.hosted;
+    frame.src = target;
     progressCopy.textContent = 'Practicing in ' + lab.label;
-    if (localHost) fallback.hidden = true; else { fallback.hidden = false; loading.classList.add('is-hidden'); }
+    if (embedded) fallback.hidden = true; else { fallback.hidden = false; loading.classList.add('is-hidden'); }
     if (writeHistory) history.replaceState(null, '', '#' + id);
     try { localStorage.setItem('interviewos-active-lab', id); } catch (_) {}
   }
@@ -136,19 +138,19 @@
   window.setInterval(() => { if (!document.hidden) { state.practiceSeconds += 1; if (currentMode === 'progress') renderDashboard(); if (state.practiceSeconds % 10 === 0) saveState(); } }, 1000);
 
   /* Local health checks */
-  const healthTargets = [{ id: 'flightlab', label: 'Flightlab', port: '4317', url: 'http://127.0.0.1:4317/api/health' }, { id: 'restcraft', label: 'RESTcraft', port: '4321', url: 'http://127.0.0.1:4321/' }, { id: 'systemforge', label: 'SystemForge', port: '4322', url: 'http://127.0.0.1:4322/' }];
-  function renderHealth(items) { el('health-grid').innerHTML = items.map((item) => `<div class="health-item ${item.status === 'online' ? 'is-online' : item.status === 'offline' ? 'is-offline' : ''}"><i></i><span><strong>${item.label}</strong><small>${item.detail}</small></span></div>`).join(''); const online = items.filter((item) => item.status === 'online').length; healthSummaryText.textContent = localHost ? `${online} / 3 labs online` : 'published links ready'; }
+  const healthTargets = [{ id: 'flightlab', label: 'Flightlab', port: '4317', url: 'http://127.0.0.1:4317/api/health' }, { id: 'restcraft', label: 'RESTcraft', port: '4321', url: 'http://127.0.0.1:4321/' }, { id: 'systemforge', label: 'SystemForge', bundled: true, url: './systemforge/' }];
+  function renderHealth(items) { el('health-grid').innerHTML = items.map((item) => `<div class="health-item ${item.status === 'online' ? 'is-online' : item.status === 'offline' ? 'is-offline' : ''}"><i></i><span><strong>${item.label}</strong><small>${item.detail}</small></span></div>`).join(''); const online = items.filter((item) => item.status === 'online').length; healthSummaryText.textContent = localHost ? `${online} / 3 labs online` : `SystemForge ${items.find(item=>item.bundled)?.status === 'online' ? 'ready' : 'checking / unavailable'} · 2 linked labs`; }
   async function checkHealth() {
-    if (!localHost) { renderHealth(healthTargets.map((item) => ({ ...item, status: 'published', detail: 'private published lab' }))); el('health-note').textContent = 'Live port checks run from the localhost hub. Published labs are private links.'; return; }
-    el('health-note').textContent = 'Checking 127.0.0.1 ports…';
-    renderHealth(healthTargets.map((item) => ({ ...item, status: 'checking', detail: `port ${item.port}` })));
+    el('health-note').textContent = 'Checking the bundled lab and available local services…';
+    renderHealth(healthTargets.map((item) => ({ ...item, status: 'checking', detail: item.bundled ? 'included in this website' : `port ${item.port}` })));
     const results = await Promise.all(healthTargets.map(async (target) => {
+      if (!localHost && !target.bundled) return { ...target, status: 'published', detail: 'private published link · not probed' };
       const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 1600);
-      try { await fetch(target.url, { mode: 'no-cors', cache: 'no-store', signal: controller.signal }); return { ...target, status: 'online', detail: `port ${target.port} · reachable` }; }
-      catch (_) { return { ...target, status: 'offline', detail: `port ${target.port} · start server` }; }
+      try { const response = await fetch(target.url, { mode: target.bundled ? 'same-origin' : 'no-cors', cache: 'no-store', signal: controller.signal }); if (target.bundled && (!response.ok || !(await response.text()).includes('SystemForge'))) throw new Error('Missing bundled lab'); return { ...target, status: 'online', detail: target.bundled ? 'included in this website · reachable' : `port ${target.port} · reachable` }; }
+      catch (_) { return { ...target, status: 'offline', detail: target.bundled ? 'bundled lab unavailable · try reloading' : `port ${target.port} · start server` }; }
       finally { clearTimeout(timeout); }
     }));
-    renderHealth(results); el('health-note').textContent = 'Last checked just now. Refresh after starting or stopping a lab.';
+    renderHealth(results); el('health-note').textContent = localHost ? 'SystemForge runs inside this website. The other checks probe local lab services.' : 'SystemForge is checked on this website. The two private external labs are links, not verified health checks.';
   }
   el('refresh-health').addEventListener('click', checkHealth);
 
