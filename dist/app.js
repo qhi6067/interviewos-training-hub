@@ -50,10 +50,13 @@
     envChip.innerHTML = localHost ? '<i></i> Local workspace' : '<i></i> Published workspace';
     footerMode.textContent = localHost ? 'LOCAL READY' : 'PUBLISHED';
   }
-  function setMode(mode) {
+  function setMode(mode, writeHistory = true) {
+    if (!modeTabs.some(tab => tab.dataset.mode === mode)) return;
     currentMode = mode;
-    modeTabs.forEach((tab) => { const active = tab.dataset.mode === mode; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); });
+    modeTabs.forEach((tab) => { const active = tab.dataset.mode === mode; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; });
     views.forEach((view) => { view.hidden = view.dataset.view !== mode; });
+    if (writeHistory) history.replaceState(null, '', '#' + (mode === 'deck' ? document.querySelector('.lab-tab.is-active').dataset.lab : mode));
+    progressCopy.textContent = mode === 'deck' ? 'Practicing in ' + stageName.textContent : { coding: 'Practicing coding & AI', progress: 'Reviewing your progress', capstone: 'Practicing the full integration', interview: 'Practicing interview answers' }[mode];
     if (mode === 'progress') { renderDashboard(); checkHealth(); }
     if (mode === 'capstone') updateCapstonePhrase();
     if (mode === 'interview') { renderPromptPicker(); loadInterviewAnswer(); }
@@ -78,11 +81,29 @@
   frame.addEventListener('load', () => { loading.classList.add('is-hidden'); stageStatus.textContent = localHost ? 'Lab ready' : 'Panel loaded'; });
   document.querySelectorAll('.lab-tab').forEach((tab) => tab.addEventListener('click', () => { setMode('deck'); setLab(tab.dataset.lab, true); }));
   modeTabs.forEach((tab) => tab.addEventListener('click', () => setMode(tab.dataset.mode)));
+  modeTabs.forEach((tab, index) => {
+    tab.id = 'mode-' + tab.dataset.mode;
+    tab.tabIndex = index === 0 ? 0 : -1;
+    const panel = el(tab.getAttribute('aria-controls'));
+    panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id);
+    tab.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? modeTabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + modeTabs.length) % modeTabs.length;
+      setMode(modeTabs[next].dataset.mode); modeTabs[next].focus();
+    });
+  });
+  window.addEventListener('interviewos:open-mode', event => setMode(event.detail));
+  window.addEventListener('hashchange', () => {
+    const hash = location.hash.slice(1);
+    if (labs[hash]) { setMode('deck', false); setLab(hash, false); }
+    else setMode(hash, false);
+  });
   document.addEventListener('keydown', (event) => {
     if (event.target && /input|textarea|select/i.test(event.target.tagName)) return;
     const key = String(event.key);
-    if (key >= '1' && key <= '3') { const tab = tabs[Number(key) - 1]; if (tab) { setMode('deck'); setLab(tab.dataset.lab, true); tab.focus(); } }
-    if (event.altKey && key >= '1' && key <= '4') { const tab = modeTabs[Number(key) - 1]; if (tab) { setMode(tab.dataset.mode); tab.focus(); } }
+    if (event.altKey && key >= '1' && key <= '5') { event.preventDefault(); const tab = modeTabs[Number(key) - 1]; if (tab) { setMode(tab.dataset.mode); tab.focus(); } return; }
+    if (!event.ctrlKey && !event.metaKey && key >= '1' && key <= '3') { const tab = tabs[Number(key) - 1]; if (tab) { setMode('deck'); setLab(tab.dataset.lab, true); tab.focus(); } }
   });
 
   /* Unified progress dashboard */
@@ -171,5 +192,6 @@
   const fromHash = location.hash.replace('#', ''); let initialLab = fromHash && labs[fromHash] ? fromHash : null;
   if (!initialLab) { try { initialLab = localStorage.getItem('interviewos-active-lab'); } catch (_) {} }
   renderDashboard(); renderPromptPicker(); loadInterviewAnswer(); updateCapstoneScore(); updateCapstonePhrase(); checkHealth(); setLab(initialLab && labs[initialLab] ? initialLab : 'flightlab', false); saveState();
+  if (modeTabs.some(tab => tab.dataset.mode === fromHash)) setMode(fromHash, false);
   window.addEventListener('beforeunload', saveState);
 })();

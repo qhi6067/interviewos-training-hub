@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#08111f" />
-    <meta name="description" content="InterviewOS: one tabbed workspace for Flightlab, RESTcraft, and SystemForge." />
+    <meta name="description" content="InterviewOS: coding, AI, and integration interview practice in one workspace." />
     <title>InterviewOS · Training Hub</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2308111f'/%3E%3Cpath d='M17 35c0-11 8-19 19-19 6 0 11 2 15 7l-7 6c-2-3-5-4-8-4-5 0-9 4-9 10s4 10 9 10c3 0 6-1 8-4l7 6c-4 5-9 7-15 7-11 0-19-8-19-19Z' fill='%2377e0c1'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="coding.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -25,9 +26,9 @@
       </header>
 
       <section class="hero">
-        <div class="eyebrow"><span class="eyebrow-line"></span> three focused labs · one workspace</div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> integrations · coding · AI</div>
         <h1>Build the integration<br /><em>muscle memory.</em></h1>
-        <p class="hero-copy">Move from drone operations to API integrations to system design without leaving your practice flow.</p>
+        <p class="hero-copy">Practice drone operations, APIs, system design, coding, and AI in one interview workspace.</p>
         <div class="hero-meta">
           <span id="health-summary"><b class="pulse-dot"></b><span id="health-summary-text">checking labs</span></span>
           <span class="meta-divider"></span>
@@ -40,6 +41,7 @@
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-progress" data-mode="progress"><span>02</span><strong>Progress</strong><small>See what to practice next</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-capstone" data-mode="capstone"><span>03</span><strong>Capstone</strong><small>Trace one integration end to end</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-interview" data-mode="interview"><span>04</span><strong>Interview room</strong><small>Practice answers out loud</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-coding" data-mode="coding"><span>05</span><strong>Coding &amp; AI</strong><small>30 questions · 6 skill tracks</small></button>
       </nav>
 
       <section class="practice-view" id="view-deck" data-view="deck">
@@ -98,7 +100,7 @@
       </section>
 
       <section class="practice-view" id="view-progress" data-view="progress" hidden>
-        <div class="view-heading"><div><div class="section-kicker">UNIFIED SIGNALS</div><h2>Progress you can explain</h2><p>Track the practice that matters across all three labs. These checkmarks stay in this browser.</p></div><button class="quiet-button" id="reset-progress" type="button">Reset progress</button></div>
+        <div class="view-heading"><div><div class="section-kicker">UNIFIED SIGNALS</div><h2>Progress you can explain</h2><p>Track your labs and coding practice. Your progress stays in this browser.</p></div><button class="quiet-button" id="reset-progress" type="button">Reset lab progress</button></div>
         <div class="metrics-grid">
           <article class="metric-card"><span class="metric-label">MISSIONS COMPLETE</span><strong id="metric-missions">0 / 9</strong><small>Across the three labs</small></article>
           <article class="metric-card"><span class="metric-label">PRACTICE TIME</span><strong id="metric-time">0m</strong><small>Time with InterviewOS open</small></article>
@@ -109,6 +111,7 @@
           <article class="panel-card mission-card"><div class="panel-card-head"><div><div class="section-kicker">PRACTICE BOARD</div><h3>Small wins compound</h3></div><span class="panel-count" id="mission-count">0 / 9</span></div><div id="mission-list" class="mission-list"></div></article>
           <aside class="panel-card next-card"><div class="section-kicker">RECOMMENDED NEXT</div><h3 id="next-lesson-title">Start with Flightlab</h3><p id="next-lesson-copy">Start telemetry, follow one message, then explain what the C2 subscriber needs.</p><button class="primary-button" id="next-lesson-button" type="button">Open next lesson →</button><div class="weak-topics"><span class="section-kicker">WEAK TOPICS</span><div id="weak-topics-list"><span class="topic-pill">WebSockets</span><span class="topic-pill">Retries</span><span class="topic-pill">Estimates</span></div></div></aside>
         </div>
+        <article class="panel-card coding-dashboard"><div><div class="section-kicker">CODING &amp; AI PRACTICE</div><h3 id="coding-dashboard-stats">0 of 30 practiced</h3><p id="coding-dashboard-next"></p><p id="coding-dashboard-topics"></p></div><button class="primary-button" id="coding-dashboard-open" type="button">Continue coding practice →</button></article>
         <article class="panel-card health-card"><div class="panel-card-head"><div><div class="section-kicker">LOCAL RUNTIME</div><h3>Lab health checks</h3></div><button class="quiet-button" id="refresh-health" type="button">Refresh now</button></div><p class="health-note" id="health-note">Checking local ports…</p><div class="health-grid" id="health-grid"></div></article>
       </section>
 
@@ -128,8 +131,20 @@
         </div>
       </section>
 
-      <footer><span>INTERVIEWOS</span><span>Made for your 9 Mothers interview prep</span><span>LOCAL TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
+      <section class="practice-view" id="view-coding" data-view="coding" hidden>
+        <div class="view-heading coding-heading"><div><div class="section-kicker">YOUR NEXT INTERVIEW · ONE QUESTION AT A TIME</div><h2>Think it through. Build it. Explain it.</h2><p>Beginner-friendly coding and AI practice. Start with a concept, check your reasoning, then write and review your answer.</p></div><span class="coding-badge">30 guided questions</span></div>
+        <div class="coding-overview"><div><strong id="coding-completed">0 / 30</strong><span>self-reviewed practice</span></div><div><strong id="coding-passed">0</strong><span>knowledge checks passed</span></div><div><strong id="coding-review">0</strong><span>questions to review</span></div><p>Start anywhere. JavaScript and Python build the foundation; React and Next.js apply it. AI connects the ideas to intelligent features.</p></div>
+        <div class="coding-tracks" id="coding-tracks" role="group" aria-label="Choose a skill track"></div>
+        <p class="coding-track-intro" id="coding-track-intro"></p>
+        <div class="coding-layout"><aside class="coding-sidebar panel-card"><div class="coding-list-heading"><h3>Your questions</h3><span id="coding-question-count"></span></div><label for="coding-filter">Show</label><select id="coding-filter"><option value="all">All questions</option><option value="todo">To practice</option><option value="review">Needs review</option><option value="done">Practiced</option></select><nav id="coding-question-list" aria-label="Questions in this track"></nav><p class="coding-sidebar-note">Try explaining your answer out loud. Interviewers learn from your reasoning, edge cases, and tradeoffs.</p></aside><article class="panel-card coding-workbench" id="coding-question" aria-label="Coding exercise"></article></div>
+        <p id="coding-storage-note" class="coding-storage-note" role="status"></p>
+      </section>
+
+      <footer><span>INTERVIEWOS</span><span>Made for your interview prep</span><span>TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
     </main>
+    <script src="coding-data.js"></script>
+    <script src="coding-core.js"></script>
+    <script src="coding.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
