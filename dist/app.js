@@ -56,7 +56,7 @@
     modeTabs.forEach((tab) => { const active = tab.dataset.mode === mode; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; });
     views.forEach((view) => { view.hidden = view.dataset.view !== mode; });
     if (writeHistory) history.replaceState(null, '', '#' + (mode === 'deck' ? document.querySelector('.lab-tab.is-active').dataset.lab : mode));
-    progressCopy.textContent = mode === 'deck' ? 'Practicing in ' + stageName.textContent : { coding: 'Practicing coding & AI', progress: 'Reviewing your progress', capstone: 'Practicing the full integration', interview: 'Practicing interview answers' }[mode];
+    progressCopy.textContent = mode === 'deck' ? 'Practicing in ' + stageName.textContent : { coding: 'Practicing coding & AI', progress: 'Reviewing your progress', capstone: 'Practicing the full integration', interview: 'Practicing interview answers', 'windows-rest': 'Building a REST server on Windows' }[mode];
     if (mode === 'progress') { renderDashboard(); checkHealth(); }
     if (mode === 'capstone') updateCapstonePhrase();
     if (mode === 'interview') { renderPromptPicker(); loadInterviewAnswer(); }
@@ -104,7 +104,7 @@
   document.addEventListener('keydown', (event) => {
     if (event.target && /input|textarea|select/i.test(event.target.tagName)) return;
     const key = String(event.key);
-    if (event.altKey && key >= '1' && key <= '5') { event.preventDefault(); const tab = modeTabs[Number(key) - 1]; if (tab) { setMode(tab.dataset.mode); tab.focus(); } return; }
+    if (event.altKey && key >= '1' && key <= String(modeTabs.length)) { event.preventDefault(); const tab = modeTabs[Number(key) - 1]; if (tab) { setMode(tab.dataset.mode); tab.focus(); } return; }
     if (!event.ctrlKey && !event.metaKey && key >= '1' && key <= '3') { const tab = tabs[Number(key) - 1]; if (tab) { setMode('deck'); setLab(tab.dataset.lab, true); tab.focus(); } }
   });
 

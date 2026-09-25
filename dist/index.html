@@ -9,6 +9,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2308111f'/%3E%3Cpath d='M17 35c0-11 8-19 19-19 6 0 11 2 15 7l-7 6c-2-3-5-4-8-4-5 0-9 4-9 10s4 10 9 10c3 0 6-1 8-4l7 6c-4 5-9 7-15 7-11 0-19-8-19-19Z' fill='%2377e0c1'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="coding.css" />
+    <link rel="stylesheet" href="windows-rest.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -42,6 +43,7 @@
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-capstone" data-mode="capstone"><span>03</span><strong>Capstone</strong><small>Trace one integration end to end</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-interview" data-mode="interview"><span>04</span><strong>Interview room</strong><small>Practice answers out loud</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-coding" data-mode="coding"><span>05</span><strong>Coding &amp; AI</strong><small>30 questions · 6 skill tracks</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-windows-rest" data-mode="windows-rest"><span>06</span><strong>Windows REST</strong><small>Build your first real server</small></button>
       </nav>
 
       <section class="practice-view" id="view-deck" data-view="deck">
@@ -67,6 +69,7 @@
           </button>
         </nav>
 
+        <a class="rest-guide-link" href="#windows-rest">New to APIs? Set up a real REST server on Windows →</a>
         <div class="lab-stage">
           <div class="stage-toolbar">
             <div class="stage-title"><span class="stage-dot"></span><strong id="stage-name">Flightlab</strong><span class="stage-separator">/</span><span id="stage-subtitle">Drone integrations</span></div>
@@ -140,11 +143,17 @@
         <p id="coding-storage-note" class="coding-storage-note" role="status"></p>
       </section>
 
+      <section class="practice-view" id="view-windows-rest" data-view="windows-rest" hidden>
+        <div class="view-heading"><div><div class="section-kicker">HANDS-ON · WINDOWS 10 / 11 · ABOUT 30 MINUTES</div><h2>Your first REST server.<br />Running on Windows.</h2><p>Build a small task API with JavaScript, Node.js, and Express. Follow the steps in order, then practice explaining every request.</p></div></div>
+        <div id="windows-rest-guide"></div>
+      </section>
+
       <footer><span>INTERVIEWOS</span><span>Made for your interview prep</span><span>TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
     </main>
     <script src="coding-data.js"></script>
     <script src="coding-core.js"></script>
     <script src="coding.js"></script>
     <script src="app.js"></script>
+    <script src="windows-rest.js"></script>
   </body>
 </html>
