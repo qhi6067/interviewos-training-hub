@@ -50,4 +50,8 @@ node --test tests/windows-rest.test.cjs
 Remove-Item Env:NODE_PATH
 ```
 
-The test covers CRUD, response status/body/Location, input validation, missing routes, malformed JSON, wrong media types, and oversized bodies. The guide uses `npm.cmd` to avoid PowerShell launcher-policy issues and `curl.exe` to avoid the Windows PowerShell curl alias.
+The test covers CRUD, response status/body/Location, input validation, missing routes, malformed JSON, wrong media types, and oversized bodies. On Windows it also runs the client workflow through Windows PowerShell. The guide uses `npm.cmd` to avoid PowerShell launcher-policy issues and `curl.exe` to avoid the Windows PowerShell curl alias.
+
+## GitHub deployment
+
+Vercel's `interviewos-hub` project is connected to `qhi6067/interviewos-training-hub`; pushes to `main` trigger production deployments using the `dist` output directory in `vercel.json`. For this private repository on the Hobby plan, commit authors must resolve to the connected owner account. Use a GitHub-associated email (including its privacy-preserving noreply address), not a placeholder local email.
