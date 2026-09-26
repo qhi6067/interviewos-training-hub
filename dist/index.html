@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="coding.css" />
     <link rel="stylesheet" href="windows-rest.css" />
     <link rel="stylesheet" href="workshop.css" />
+    <link rel="stylesheet" href="roles.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -46,6 +47,7 @@
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-coding" data-mode="coding"><span>05</span><strong>Coding &amp; AI</strong><small>30 questions · 6 skill tracks</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-windows-rest" data-mode="windows-rest"><span>06</span><strong>Windows REST</strong><small>Build your first real server</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-workshop" data-mode="workshop"><span>07</span><strong>Coding Workshop</strong><small>Run · debug · build · query · review</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-roles" data-mode="roles"><span>08</span><strong>Role Prep</strong><small>Solutions · deployment · sales · FDE</small></button>
       </nav>
 
       <section class="practice-view" id="view-deck" data-view="deck">
@@ -117,7 +119,8 @@
           <aside class="panel-card next-card"><div class="section-kicker">RECOMMENDED NEXT</div><h3 id="next-lesson-title">Start with Flightlab</h3><p id="next-lesson-copy">Start telemetry, follow one message, then explain what the C2 subscriber needs.</p><button class="primary-button" id="next-lesson-button" type="button">Open next lesson →</button><div class="weak-topics"><span class="section-kicker">WEAK TOPICS</span><div id="weak-topics-list"><span class="topic-pill">WebSockets</span><span class="topic-pill">Retries</span><span class="topic-pill">Estimates</span></div></div></aside>
         </div>
         <article class="panel-card coding-dashboard"><div><div class="section-kicker">CODING &amp; AI PRACTICE</div><h3 id="coding-dashboard-stats">0 of 30 practiced</h3><p id="coding-dashboard-next"></p><p id="coding-dashboard-topics"></p></div><button class="primary-button" id="coding-dashboard-open" type="button">Continue coding practice →</button></article>
-        <article class="panel-card coding-dashboard"><div><div class="section-kicker">HANDS-ON CODING</div><h3 id="workshop-dashboard-stats">0 of 26 passing</h3><p id="workshop-dashboard-next">Run real code, debug a failure, or query a database.</p></div><a class="primary-button" href="#workshop">Open Coding Workshop →</a></article>
+        <article class="panel-card coding-dashboard"><div><div class="section-kicker">HANDS-ON CODING</div><h3 id="workshop-dashboard-stats">0 of 38 passing</h3><p id="workshop-dashboard-next">Run real code, debug a failure, or query a database.</p></div><a class="primary-button" href="#workshop">Open Coding Workshop →</a></article>
+        <article class="panel-card coding-dashboard"><div><div class="section-kicker">ROLE PREP</div><h3 id="roles-dashboard-stats">0 of 30 prompts practiced</h3><p id="roles-dashboard-next">Add your interviews in Role Prep to see what to practice next.</p></div><a class="primary-button" href="#roles">Open Role Prep →</a></article>
         <article class="panel-card health-card"><div class="panel-card-head"><div><div class="section-kicker">LOCAL RUNTIME</div><h3>Lab health checks</h3></div><button class="quiet-button" id="refresh-health" type="button">Refresh now</button></div><p class="health-note" id="health-note">Checking local ports…</p><div class="health-grid" id="health-grid"></div></article>
       </section>
 
@@ -153,16 +156,22 @@
       </section>
 
       <section class="practice-view" id="view-workshop" data-view="workshop" hidden>
-        <div class="view-heading"><div><div class="section-kicker">LEARN BY DOING · BEGINNER FRIENDLY</div><h2>Small functions.<br />Real feedback.</h2><p>Write code, see what happens, and explain your choices. Five practice areas take you from your first return statement to reviewing AI-generated code.</p></div><span class="coding-badge">26 hands-on exercises</span></div>
-        <div class="workshop-overview"><div><strong id="workshop-passed">0 / 26</strong><span>exercises passing</span></div><div><strong id="workshop-reviewed">0 / 3</strong><span>code reviews completed</span></div><p>Start with Run &amp; Test. Read the brief → edit the code → run tests → compare actual and expected results. Hints are always available.</p></div>
+        <div class="view-heading"><div><div class="section-kicker">LEARN BY DOING · BEGINNER FRIENDLY</div><h2>Small functions.<br />Real feedback.</h2><p>Write code, see what happens, and explain your choices. Six practice areas take you from your first return statement to timed assessments and reviewing AI-generated code.</p></div><span class="coding-badge">38 hands-on exercises</span></div>
+        <div class="workshop-overview"><div><strong id="workshop-passed">0 / 38</strong><span>exercises passing</span></div><div><strong id="workshop-reviewed">0 / 3</strong><span>code reviews completed</span></div><p>Start with Run &amp; Test. Read the brief → edit the code → run tests → compare actual and expected results. Hints are always available.</p></div>
         <details class="panel-card workshop-rest-setup" id="workshop-rest-setup" open>
           <summary><span class="section-kicker">WINDOWS 10 / 11 · ABOUT 10 MINUTES · NEEDED FOR GUIDED PROJECTS</span><strong>Set up your local REST server</strong><small>Install Node.js and Express, add the downloadable starter, then run and test it from PowerShell.</small><span class="rest-setup-toggle" aria-hidden="true"></span></summary>
           <div id="workshop-rest-quickstart"><p>Loading the setup steps… You can also follow the <a href="#windows-rest">Windows REST guide</a>.</p></div>
         </details>
         <div id="workshop-areas" class="workshop-areas" role="group" aria-label="Workshop practice areas"></div>
         <p id="workshop-area-description" class="workshop-description"></p>
+        <div id="workshop-round" class="panel-card workshop-round" role="region" aria-label="Timed assessment round" hidden></div>
         <div class="workshop-layout"><aside class="panel-card workshop-sidebar"><label for="workshop-language">Language</label><select id="workshop-language"><option value="all">All languages</option><option value="javascript">JavaScript</option><option value="python">Python</option><option value="sql">SQL</option></select><nav id="workshop-exercises" aria-label="Workshop exercises"></nav><p>Progress and drafts save in this browser. Editing a passed answer clears its pass until you run it again.</p></aside><article class="panel-card workshop-bench" id="workshop-exercise" aria-label="Selected workshop exercise"></article></div>
         <p id="workshop-storage" class="coding-storage-note" role="status"></p>
+      </section>
+
+      <section class="practice-view" id="view-roles" data-view="roles" hidden>
+        <div class="view-heading"><div><div class="section-kicker">ROLE PREP · SOLUTIONS · DEPLOYMENT · SALES · FDE</div><h2>Practice the interview<br />you actually have.</h2><p>Pick the role you are interviewing for. See what the round tests, answer real prompts against a timer, and check your answer against what a strong one covers.</p></div><span class="coding-badge">6 tracks · 30 prompts</span></div>
+        <div id="roles-app"></div>
       </section>
 
       <footer><span>INTERVIEWOS</span><span>Made for your interview prep</span><span>TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
@@ -176,5 +185,8 @@
     <script src="workshop-core.js"></script>
     <script src="workshop-runner.js"></script>
     <script src="workshop.js"></script>
+    <script src="roles-data.js"></script>
+    <script src="roles-core.js"></script>
+    <script src="roles.js"></script>
   </body>
 </html>
