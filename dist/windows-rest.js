@@ -8,10 +8,14 @@
 New-Item -ItemType Directory -Path $restLab -Force | Out-Null
 Set-Location $restLab
 npm.cmd init -y
-npm.cmd install express@5`,
-    install: 'npm.cmd init -y\nnpm.cmd install express@5',
+npm.cmd install express@5
+npm.cmd pkg set 'scripts.dev=node --watch server.cjs' 'scripts.start=node server.cjs'`,
+    install: `npm.cmd init -y
+npm.cmd install express@5
+npm.cmd pkg set 'scripts.dev=node --watch server.cjs' 'scripts.start=node server.cjs'`,
+    scripts: `npm.cmd pkg set 'scripts.dev=node --watch server.cjs' 'scripts.start=node server.cjs'`,
     editor: 'notepad .\\server.cjs',
-    start: 'node .\\server.cjs',
+    start: 'npm.cmd run dev',
     health: 'Invoke-RestMethod -Uri http://127.0.0.1:3001/health',
     tasks: 'Invoke-RestMethod -Uri http://127.0.0.1:3001/api/tasks',
     move: `Move-Item -Path (Join-Path $HOME 'Downloads\\server.cjs') -Destination .
@@ -42,11 +46,11 @@ Invoke-RestMethod -Uri "$baseUri/api/tasks"`,
     bad: `$badBody = @{ title = '' } | ConvertTo-Json
 Invoke-RestMethod -Uri http://127.0.0.1:3001/api/tasks -Method Post -ContentType 'application/json' -Body $badBody`,
     missing: 'curl.exe -i http://127.0.0.1:3001/api/tasks/999999',
-    port: '$env:PORT = "3002"\nnode .\\server.cjs',
+    port: '$env:PORT = "3002"\nnpm.cmd run dev',
     folder: `Get-ChildItem
 npm.cmd install express@5`,
     restart: `Set-Location (Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'InterviewOS\\windows-rest-lab')
-node .\\server.cjs`
+npm.cmd run dev`
   };
   let selected = 0, serverLoaded = false, serverError = false;
   const sourcePath = './downloads/windows-rest/server.cjs';
@@ -56,8 +60,8 @@ node .\\server.cjs`
         <li>Open <strong>File Explorer</strong> and go to where you want the project, for example Documents or <code>C:\\Users\\<em>you</em>\\Projects</code>. If OneDrive syncs Documents, a folder outside it avoids syncing thousands of library files.</li>
         <li>Right-click an empty area, choose <strong>New → Folder</strong>, name it <code>windows-rest-lab</code>, and open it.</li>
         <li>Click the address bar, type <code>powershell</code>, and press Enter. PowerShell opens inside this folder; this is <strong>window A</strong>. On Windows 11 you can also right-click inside the folder and choose <strong>Open in Terminal</strong>.</li>
-        <li>Install Express in this folder:</li></ol>${code('install','PowerShell A · install Express in this folder')}</div>
-      <div class="rest-option"><h4>Option B · PowerShell only: Documents\\InterviewOS\\windows-rest-lab</h4><p>Open PowerShell (window A) and paste this block. It creates the folder, moves into it, and installs Express 5.</p>${code('project','PowerShell A · create the folder and install Express')}</div>
+        <li>Install Express and add the <code>npm run dev</code> shortcut:</li></ol>${code('install','PowerShell A · install Express and add the dev script')}</div>
+      <div class="rest-option"><h4>Option B · PowerShell only: Documents\\InterviewOS\\windows-rest-lab</h4><p>Open PowerShell (window A) and paste this block. It creates the folder, moves into it, installs Express 5, and adds the <code>npm run dev</code> shortcut.</p>${code('project','PowerShell A · create the folder and install Express')}</div>
     </div>
     <p>Either way, the PowerShell prompt now ends with your folder name, for example <code>PS C:\\Users\\you\\Projects\\windows-rest-lab&gt;</code>. Run the later commands from this folder.</p>`;
   const checkpoint = text => `<div class="rest-checkpoint"><p><strong>Checkpoint:</strong> ${text}</p></div>`;
@@ -74,7 +78,7 @@ node .\\server.cjs`
     { name: 'Create the project', title: 'Make a folder and install Express.', body: () => `
       <p>Create a project folder, open PowerShell inside it, and install Express 5 there. Choose <strong>one</strong> option. Installation needs an internet connection.</p>
       ${folderOptions()}
-      <p><code>npm.cmd init -y</code> creates <code>package.json</code> with defaults. <code>npm.cmd install express@5</code> installs the Express 5 library and records its dependency. In Option B, <code>Set-Location</code> moves PowerShell into the new folder.</p>
+      <p><code>npm.cmd init -y</code> creates <code>package.json</code> with defaults. <code>npm.cmd install express@5</code> installs the Express 5 library and records its dependency. <code>npm.cmd pkg set</code> adds two shortcuts to <code>package.json</code>: <code>npm run dev</code> starts the server and restarts it whenever you save <code>server.cjs</code>, and <code>npm start</code> runs it once. In Option B, <code>Set-Location</code> moves PowerShell into the new folder.</p>
       <p>You should see <code>package.json</code>, <code>package-lock.json</code>, and a <code>node_modules</code> folder. Leave them together. If you already use this folder for another project, choose a new folder name and use it consistently.</p>
       <div class="rest-note"><p>Use <strong>npm.cmd</strong> in these PowerShell commands. It runs the Windows command launcher and avoids the common “npm.ps1 cannot be loaded” issue without changing your execution policy.</p></div>
       ${checkpoint('The install finished and the PowerShell prompt ends with your project folder.')}
@@ -90,12 +94,12 @@ node .\\server.cjs`
       ${reference('Express API reference','https://expressjs.com/en/5x/api/')}` },
     { name: 'Start the server', title: 'Keep one window for the server.', body: () => `
       <p>Back in <strong>PowerShell window A</strong>, run:</p>${code('start','PowerShell A · start the server')}
-      <p>Expected output: <code>REST practice server: http://127.0.0.1:3001</code>. Leave this window running. It is normal for the prompt to stay busy while the server listens.</p>
+      <p>npm first prints the script it runs, <code>node --watch server.cjs</code>, then <code>REST practice server: http://127.0.0.1:3001</code>. Leave this window running. It is normal for the prompt to stay busy while the server listens. <code>npm run dev</code> is a shortcut: running <code>node .\\server.cjs</code> directly starts the same server, without the automatic restart.</p>
       <p>Open a <strong>second PowerShell window or tab (B)</strong> and run:</p>${code('health','PowerShell B · check the server')}
       <p>You should see <code>status</code> with the value <code>ok</code>. PowerShell turns JSON into an object for display. In a browser on this same computer, <a href="http://127.0.0.1:3001/health" target="_blank" rel="noopener noreferrer">open /health</a> to see <code>{"status":"ok"}</code>.</p>
       <p><strong>127.0.0.1</strong> means this computer, <strong>3001</strong> selects the listening port, and <strong>/health</strong> selects the route. There is no DNS lookup in this numeric-IP example. Typing a URL in the browser address bar sends a GET request.</p>
       ${checkpoint('Window A is running the server, and window B gets an ok response.')}
-      <p>To stop: press <strong>Ctrl+C in window A</strong>. After editing the JavaScript, stop and run it again. To return another day, open your project folder in File Explorer, type <code>powershell</code> in the address bar, and run <code>node .\\server.cjs</code> again. If you used Option B, this works from any PowerShell window:</p>${code('restart','PowerShell · return to the lab (Option B folder)')}` },
+      <p>To stop: press <strong>Ctrl+C in window A</strong>. If Windows asks <code>Terminate batch job (Y/N)?</code>, type <strong>Y</strong> and press Enter. You do not need to restart after editing: watch mode restarts the server each time you save <code>server.cjs</code>, which also resets the tasks. To return another day, open your project folder in File Explorer, type <code>powershell</code> in the address bar, and run <code>npm.cmd run dev</code> again. If you used Option B, this works from any PowerShell window:</p>${code('restart','PowerShell · return to the lab (Option B folder)')}` },
     { name: 'Send REST requests', title: 'Create, read, update, and delete.', body: () => `
       <p>Run the following block in <strong>PowerShell window B</strong>, with window A still running. The <code>$newTask</code> variable keeps the real ID from the creation response, so you never have to guess it.</p>
       ${code('requests','PowerShell B · the complete CRUD exercise')}
@@ -110,7 +114,8 @@ node .\\server.cjs`
       <details><summary>“node is not recognized” or “npm.cmd is not recognized”</summary><p>Close and reopen PowerShell after installing Node.js. If it still fails, confirm Node.js was installed with its PATH option. On a managed PC, ask your IT team to check the approved installation.</p></details>
       <details><summary>“npm.ps1 cannot be loaded”</summary><p>Use <code>npm.cmd</code> as shown in the lesson. You do not need to lower PowerShell’s execution policy for these commands.</p></details>
       <details><summary>“Cannot find module express” or “Cannot find module server.cjs”</summary><p>Make sure PowerShell is in the project folder: the prompt should end with its name. If it does not, open the folder in File Explorer and type <code>powershell</code> in the address bar. <code>Get-ChildItem</code> lists its files; look for <code>server.cjs</code> and <code>package.json</code>. If the file ends in <code>.txt</code>, rename it in File Explorer with file-name extensions visible. Install Express in this folder:</p>${code('folder','PowerShell · verify the project folder')}</details>
-      <details><summary>“Port 3001 is busy” / EADDRINUSE</summary><p>A server may already be running in window A. Stop your own earlier server with Ctrl+C, or choose another port:</p>${code('port','PowerShell A · use another port')}<p>Then change <code>3001</code> to <code>3002</code> in every test URL and in <code>$baseUri</code>. The environment variable applies to this terminal session.</p></details>
+      <details><summary>npm error Missing script: “dev”</summary><p>The <code>dev</code> shortcut is not in this folder’s <code>package.json</code>, for example if you set up the folder with an older version of this guide. From the project folder, add it:</p>${code('scripts','PowerShell A · add the dev and start scripts')}<p>Then run <code>npm.cmd run dev</code> again.</p></details>
+      <details><summary>“Port 3001 is busy” / EADDRINUSE</summary><p>A server may already be running in another window. In watch mode the message is followed by “Waiting for file changes before restarting”; press Ctrl+C in this window first. Then stop your earlier server with Ctrl+C, or choose another port:</p>${code('port','PowerShell A · use another port')}<p>Then change <code>3001</code> to <code>3002</code> in every test URL and in <code>$baseUri</code>. The environment variable applies to this terminal session.</p></details>
       <details><summary>Connection refused / unable to connect</summary><p>Check that window A still shows the running server, use the printed port, and test <code>/health</code> from window B on the same PC. Closing window A stops the server. A loopback-only server will not be reachable from another computer or phone; no inbound firewall rule is needed for this local lesson.</p></details>
       <details><summary>400, 404, 413, or 415</summary><p><strong>400:</strong> inspect the JSON and validation message. <strong>404:</strong> check the route, method, and task ID; the bare <code>/</code> path is not defined. <strong>413:</strong> keep the JSON body under 16 KB. <strong>415:</strong> send <code>-ContentType 'application/json'</code> for POST and PATCH.</p></details>
       <details><summary>The API works in PowerShell but my React page reports CORS</summary><p>A browser enforces origin rules; PowerShell does not. A page on port 3000 and an API on port 3001 have different origins. When adding a frontend, use a development proxy or explicitly allow its intended origin and required methods/headers. This lesson’s PowerShell flow needs no CORS setup. CORS is not authentication.</p></details>
@@ -156,14 +161,14 @@ node .\\server.cjs`
       <div class="rest-quick-downloads"><a class="primary-button" href="${sourcePath}" download="server.cjs">Download server.cjs starter ↓</a><a class="secondary-button" href="downloads/react-task-manager.zip" download>Download React task manager (.zip) ↓</a></div>
       <ol class="rest-quick-steps">
         <li><h4>Install Node.js LTS</h4><p>Get the <strong>LTS</strong> Windows installer from the <a href="https://nodejs.org/en/download" target="_blank" rel="noopener noreferrer">official Node.js download page ↗</a> and keep its default options. Close and reopen PowerShell, then check that both commands print a version:</p>${code('versions','PowerShell · check your tools')}</li>
-        <li><h4>Create the project folder and install Express</h4><p>Pick one option. Both leave <strong>PowerShell window A</strong> open inside the project folder. Installation needs internet access.</p>${folderOptions()}<p>Type <code>npm.cmd</code>, not <code>npm</code>. It avoids the “npm.ps1 cannot be loaded” error without changing your execution policy.</p></li>
+        <li><h4>Create the project folder and install Express</h4><p>Pick one option. Both leave <strong>PowerShell window A</strong> open inside the project folder. Installation needs internet access.</p>${folderOptions()}<p>Type <code>npm.cmd</code>, not <code>npm</code>. It avoids the “npm.ps1 cannot be loaded” error without changing your execution policy. The last line adds an <code>npm run dev</code> shortcut that starts the server.</p></li>
         <li><h4>Add the starter server</h4><p><a href="${sourcePath}" download="server.cjs">Download server.cjs</a>, then, still in window A, move it from Downloads into the project folder:</p>${code('move','PowerShell A · move the starter into the project')}<p>The list should show <code>server.cjs</code>, <code>package.json</code>, and <code>node_modules</code>. If your browser saved the file elsewhere or named it <code>server (1).cjs</code>, drag it into the folder in File Explorer and rename it to <code>server.cjs</code>.</p></li>
-        <li><h4>Start the server</h4>${code('start','PowerShell A · start the server')}<p>Expect <code>REST practice server: http://127.0.0.1:3001</code>. Leave window A open while you practice; press <strong>Ctrl+C</strong> there to stop the server.</p></li>
+        <li><h4>Start the server</h4>${code('start','PowerShell A · start the server')}<p>npm prints the script it runs, then <code>REST practice server: http://127.0.0.1:3001</code>. Leave window A open while you practice; saving <code>server.cjs</code> restarts the server automatically. Press <strong>Ctrl+C</strong> there to stop it, and type <strong>Y</strong> if asked “Terminate batch job?”.</p></li>
         <li><h4>Test it from a second window</h4><p>Open <strong>PowerShell window B</strong> and run each command:</p>${code('health','PowerShell B · health check')}${code('tasks','PowerShell B · list tasks')}<p>You should see <code>ok</code> under <code>status</code>, then one starter task, <em>Practice REST requests</em>. Your REST server is ready.</p></li>
       </ol>
       <p class="rest-copy-status" id="workshop-rest-copy-status" role="status" aria-live="polite"></p>
       <div class="rest-quick-actions"><button class="primary-button" type="button" data-rest-continue>Server running · open Guided projects →</button><a href="#windows-rest" data-rest-open-step="4">Practice full CRUD requests →</a><a href="#windows-rest" data-rest-open-step="5">Fix a Windows error →</a></div>
-      <details class="rest-quick-return"><summary>Coming back another day? Restart the server</summary><p>Open your project folder in File Explorer, type <code>powershell</code> in the address bar, and run <code>node .\\server.cjs</code>. If you used Option B, this works from any PowerShell window:</p>${code('restart','PowerShell A · return to the lab (Option B folder)')}</details>`;
+      <details class="rest-quick-return"><summary>Coming back another day? Restart the server</summary><p>Open your project folder in File Explorer, type <code>powershell</code> in the address bar, and run <code>npm.cmd run dev</code>. If you used Option B, this works from any PowerShell window:</p>${code('restart','PowerShell A · return to the lab (Option B folder)')}</details>`;
     quick.addEventListener('click', async event => {
       const guideLink = event.target.closest('[data-rest-open-step]');
       if (guideLink) { selected = Number(guideLink.dataset.restOpenStep); render(); }
