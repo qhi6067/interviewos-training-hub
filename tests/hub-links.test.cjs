@@ -7,10 +7,11 @@ const dist = path.join(__dirname, '../dist');
 const read = name => fs.readFileSync(path.join(dist, name), 'utf8');
 
 test('every download link in the hub points to a published file', () => {
-  const sources = ['index.html', 'windows-rest.js', 'workshop.js'].map(read).join('\n');
+  const sources = ['index.html', 'windows-rest.js', 'workshop.js', 'stacks.js'].map(read).join('\n');
   const links = new Set([...sources.matchAll(/(?:\.\/)?(downloads\/[\w./-]+)/g)].map(match => match[1]));
   assert.ok(links.has('downloads/windows-rest/server.cjs'));
   assert.ok(links.has('downloads/react-task-manager.zip'));
+  assert.ok(links.has('downloads/rest-stacks.zip'));
   for (const link of links) assert.ok(fs.existsSync(path.join(dist, link)), `${link} is missing from dist`);
 });
 
