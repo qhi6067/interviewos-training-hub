@@ -29,8 +29,9 @@ The standalone source is in the sibling `systemforge/dist` project. After editin
 - **Coding & AI** — 30 guided exercises across JavaScript, TypeScript, Python, React, Next.js App Router, and AI integrations. Each has an explanation, code or architecture prompt, auto-graded knowledge check, hint, worked answer, follow-up question, and self-review criteria. The Progress tab recommends missed questions first.
 - **Windows REST** — seven beginner steps for installing Node.js LTS, creating the project folder in File Explorer or PowerShell, setting up Express 5, saving a downloadable server and running it with `npm run dev` (Node watch mode), testing CRUD with PowerShell, troubleshooting Windows errors, and explaining the design in an interview. Available at `/#windows-rest`, from the lab deck, and as a five-step quick-start at the top of the Coding Workshop.
 - **Role Prep** — six role tracks (first-call screen, solutions architect, deployment engineer, sales engineer, deployment program manager, forward deployed/AI agents) with 30 timed prompts, follow-up questions, strong-answer checklists, questions to ask, a 60–90 second pitch builder, and a personal interview schedule. Available at `/#roles`.
+- **REST across stacks** — the Windows REST task API served by Express, Next.js, FastAPI, and Spring Boot and called from React, CSS, Python requests, PowerShell, and curl. Each tab names the language and shows setup commands, runnable code, a common-syntax table, and differences to notice; a Compare tab lines them up side by side. Available at `/#rest-stacks`.
 
-Use `1`–`3` to switch labs and `Alt+1`–`8` to switch practice modes. Arrow keys navigate the main tab bar. Link directly to coding practice with `/#coding`, or executable exercises with `/#workshop`.
+Use `1`–`3` to switch labs and `Alt+1`–`9` to switch practice modes. Arrow keys navigate the main tab bar. Link directly to coding practice with `/#coding`, or executable exercises with `/#workshop`.
 
 Coding drafts and progress use the separate `interviewos-coding-v1` localStorage key. Existing lab progress is preserved. Storage is specific to a browser and website origin: localhost and the published site do not sync. Written answers are self-reviewed; the scratchpad does not execute code or use an AI grader. No API key is required. “Reset lab progress” leaves coding practice intact.
 
@@ -62,6 +63,20 @@ Vercel's `interviewos-hub` project is connected to `qhi6067/interviewos-training
 The eighth tab at `/#roles` rehearses the interview you actually have. Each track lists what the round tests, an answer framework, five prompts with a countdown timer, a hidden follow-up, a strong-answer checklist, and questions to ask the interviewer. A saved practice needs a 40-character outline or at least one checked point, so answering aloud counts. The pitch builder assembles Present → Proof → Bridge → Value and estimates speaking time at 150 words per minute.
 
 The interview schedule, answers, and pitch are stored only in the viewer's browser under `interviewos-roles-v1`; company names and dates are never part of the site's code. Content lives in `dist/roles-data.js` (kept company-neutral; a test enforces this), state rules in `dist/roles-core.js`, and UI in `dist/roles.js` and `dist/roles.css`. Validate with `node --test tests/roles.test.cjs`.
+
+## REST across stacks
+
+The ninth tab at `/#rest-stacks` shows one five-route task contract in nine stacks and eight languages. The Windows REST lesson labels every code box with its language (PowerShell or JavaScript), lists the languages it uses, and links to the PowerShell syntax reference in this tab. Links elsewhere in the hub open a specific stack with `data-stack-link="<id>"`; the last selected stack is remembered under `interviewos-stacks-tab`.
+
+The samples are real files in `examples/rest-stacks` and are the only source for the code shown. After editing one, run `python scripts/build-stacks.py`, which regenerates `dist/stacks-code.js` and `dist/downloads/rest-stacks.zip`. Tab metadata (language, setup, syntax tables, notes) lives in `dist/stacks-data.js`; UI and styles are `dist/stacks.js` and `dist/stacks.css`.
+
+Every server sample was run against the same contract checks: Express, Next.js 16 (`next dev` and `next build` + `next start`), FastAPI, and Spring Boot 4.1 on Java 21. The React and CSS samples were driven in Chromium against the Next.js API, the Python and curl clients against Express, and the PowerShell client with PowerShell 7.6. Windows PowerShell 5.1 was not available to test. `tests/stacks.test.cjs` checks the tab data, fails if the embedded code drifts from the example files, and runs the Express sample against the contract (it needs Express, like the Windows REST test):
+
+```powershell
+$env:NODE_PATH = (Resolve-Path .vercel/windows-rest-test/node_modules).Path
+node --test tests/stacks.test.cjs
+Remove-Item Env:NODE_PATH
+```
 
 ## Coding Workshop
 

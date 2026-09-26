@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="windows-rest.css" />
     <link rel="stylesheet" href="workshop.css" />
     <link rel="stylesheet" href="roles.css" />
+    <link rel="stylesheet" href="stacks.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -48,6 +49,7 @@
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-windows-rest" data-mode="windows-rest"><span>06</span><strong>Windows REST</strong><small>Build your first real server</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-workshop" data-mode="workshop"><span>07</span><strong>Coding Workshop</strong><small>Run · debug · build · query · review</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-roles" data-mode="roles"><span>08</span><strong>Role Prep</strong><small>Solutions · deployment · sales · FDE</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-rest-stacks" data-mode="rest-stacks"><span>09</span><strong>REST across stacks</strong><small>Next.js · React · Python · Java · more</small></button>
       </nav>
 
       <section class="practice-view" id="view-deck" data-view="deck">
@@ -152,6 +154,7 @@
 
       <section class="practice-view" id="view-windows-rest" data-view="windows-rest" hidden>
         <div class="view-heading"><div><div class="section-kicker">HANDS-ON · WINDOWS 10 / 11 · ABOUT 30 MINUTES</div><h2>Your first REST server.<br />Running on Windows.</h2><p>Build a small task API with JavaScript, Node.js, and Express. Follow the steps in order, then practice explaining every request.</p></div></div>
+        <div class="panel-card rest-langs"><div class="section-kicker">LANGUAGES IN THIS LESSON</div><ul><li><span class="lang-chip">PowerShell</span>The commands you type in Windows: the client</li><li><span class="lang-chip">JavaScript</span><code>server.cjs</code>, run by Node.js with Express: the server</li><li><span class="lang-chip">JSON</span>The data format of request and response bodies</li><li><span class="lang-chip">HTTP</span>Methods, paths, headers, and status codes</li></ul><p><a href="#rest-stacks" data-stack-link="powershell">PowerShell syntax reference →</a><a href="#rest-stacks" data-stack-link="compare">The same API in Next.js, React, Python, Java, and more →</a></p></div>
         <div id="windows-rest-guide"></div>
       </section>
 
@@ -174,6 +177,12 @@
         <div id="roles-app"></div>
       </section>
 
+      <section class="practice-view" id="view-rest-stacks" data-view="rest-stacks" hidden>
+        <div class="view-heading"><div><div class="section-kicker">SAME API · NINE STACKS</div><h2>One task API.<br />Every stack you’ll meet.</h2><p>The Windows REST server’s five routes, served by Express, Next.js, FastAPI, and Spring Boot, and called from React, CSS, Python, PowerShell, and curl. Each tab names the language, shows runnable code, and explains the syntax.</p></div><span class="coding-badge">9 stacks · 8 languages</span></div>
+        <p class="stacks-langs"><span>Languages:</span><span class="lang-chip">JavaScript</span><span class="lang-chip">TypeScript</span><span class="lang-chip">Python</span><span class="lang-chip">Java</span><span class="lang-chip">JSX</span><span class="lang-chip">CSS</span><span class="lang-chip">PowerShell</span><span class="lang-chip">Bash</span></p>
+        <div id="stacks-app"></div>
+      </section>
+
       <footer><span>INTERVIEWOS</span><span>Made for your interview prep</span><span>TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
     </main>
     <script src="coding-data.js"></script>
@@ -188,5 +197,8 @@
     <script src="roles-data.js"></script>
     <script src="roles-core.js"></script>
     <script src="roles.js"></script>
+    <script src="stacks-code.js"></script>
+    <script src="stacks-data.js"></script>
+    <script src="stacks.js"></script>
   </body>
 </html>

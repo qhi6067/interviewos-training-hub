@@ -1,0 +1,20 @@
+/* styles.css · CSS for the states an API call creates */
+:root { --danger: #b42318; --muted: #667085; }
+
+/* Loading: the request is still in flight */
+[aria-busy="true"] { color: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.45; } }
+
+/* Error: the request failed or returned 4xx or 5xx */
+.error-banner { padding: 0.75rem 1rem; border-left: 4px solid var(--danger); color: var(--danger); background: #fef3f2; }
+
+/* Invalid input: keep the button visibly unavailable */
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Data-driven styling: data-done comes from the API's done field */
+.task[data-done="true"] label { color: var(--muted); text-decoration: line-through; }
+
+/* Respect people who turn off animation */
+@media (prefers-reduced-motion: reduce) {
+  [aria-busy="true"] { animation: none; }
+}

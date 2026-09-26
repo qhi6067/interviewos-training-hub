@@ -54,7 +54,10 @@ npm.cmd run dev`
   };
   let selected = 0, serverLoaded = false, serverError = false;
   const sourcePath = './downloads/windows-rest/server.cjs';
-  const code = (id, label) => `<div class="rest-code-box"><div class="rest-code-bar"><span>${escape(label)}</span><button class="quiet-button" type="button" data-rest-copy="${id}" aria-label="Copy ${escape(label)}">Copy</button></div><pre tabindex="0" aria-label="${escape(label)}"><code>${escape(commands[id])}</code></pre></div>`;
+  // Every snippet is PowerShell except the server file; the badge names the language.
+  const languageOf = id => id === 'server' ? 'JavaScript' : 'PowerShell';
+  const shortLabel = label => label.replace(/^(PowerShell|JavaScript)\s*/, '').replace(/^([AB]) · /, 'window $1 · ').replace(/^· /, '');
+  const code = (id, label) => `<div class="rest-code-box"><div class="rest-code-bar"><span><span class="lang-chip">${languageOf(id)}</span>${escape(shortLabel(label))}</span><button class="quiet-button" type="button" data-rest-copy="${id}" aria-label="Copy ${escape(label)}">Copy</button></div><pre tabindex="0" aria-label="${escape(label)}"><code>${escape(commands[id])}</code></pre></div>`;
   const folderOptions = () => `<div class="rest-options">
       <div class="rest-option"><h4>Option A · File Explorer: you choose where it lives</h4><ol>
         <li>Open <strong>File Explorer</strong> and go to where you want the project, for example Documents or <code>C:\\Users\\<em>you</em>\\Projects</code>. If OneDrive syncs Documents, a folder outside it avoids syncing thousands of library files.</li>
@@ -107,6 +110,7 @@ npm.cmd run dev`
       <p><code>Content-Type: application/json</code> describes the request body. <code>ConvertTo-Json</code> creates valid JSON from a PowerShell object. <code>Invoke-RestMethod</code> shows parsed data; use <code>curl.exe -i</code> to inspect the status line and headers too. The <code>.exe</code> selects curl itself instead of a PowerShell alias.</p>${code('status','PowerShell B · inspect HTTP headers')}
       <h4>Try two expected failures</h4><p>An empty title should return <strong>400</strong>. PowerShell will show an error for this non-success response; that is the intended result.</p>${code('bad','PowerShell B · invalid input')}
       <p>A task ID that does not exist should return <strong>404</strong> with a JSON error.</p>${code('missing','PowerShell B · missing task')}
+      <p>New to PowerShell syntax such as <code>$variables</code>, <code>@{ }</code> hashtables, and the <code>|</code> pipe? <a href="#rest-stacks" data-stack-link="powershell">Open the PowerShell syntax reference →</a></p>
       ${checkpoint('You created a task, read it, changed done to true, deleted it, and recognized an expected validation failure.')}
       ${reference('PowerShell Invoke-RestMethod','https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-5.1')}` },
     { name: 'Fix common errors', title: 'Find the failing layer first.', body: () => `
@@ -125,7 +129,7 @@ npm.cmd run dev`
       <p>Spend 60–90 seconds explaining the path from client to response. Name the resource, request, validation, state change, and failure behavior.</p>
       <div class="rest-checkpoint"><p>“I built a local task API with Node.js and Express. The client sends HTTP requests to resource URLs. Express parses the JSON and routes by method and path. I validate input, update an in-memory collection, and return JSON with a meaningful status code. I tested CRUD, invalid input, and missing IDs from PowerShell.”</p></div>
       <h4>Questions to rehearse</h4><ol><li>Why does POST return 201 while DELETE returns 204?</li><li>How does PATCH differ from PUT? Our PATCH changes one field; PUT generally replaces the resource representation.</li><li>What happens if the server restarts? How would a database change that?</li><li>If a POST response is lost, could a retry create a duplicate task? How would an idempotency key help?</li><li>Why can a REST API keep database state even though REST requests are stateless? Each request should carry the context needed to process it; resource data can still persist.</li></ol>
-      <h4>Where the frameworks fit</h4><p><strong>JavaScript</strong> is the language, <strong>Node.js</strong> runs it on the server, and <strong>Express</strong> provides routing and middleware. <strong>React</strong> would build the interface. <strong>Next.js</strong> can combine a React interface with server routes. A <strong>Java / Spring Boot</strong> service could expose the same HTTP contract using a different implementation.</p>
+      <h4>Where the frameworks fit</h4><p><strong>JavaScript</strong> is the language, <strong>Node.js</strong> runs it on the server, and <strong>Express</strong> provides routing and middleware. <strong>React</strong> would build the interface. <strong>Next.js</strong> can combine a React interface with server routes. A <strong>Java / Spring Boot</strong> service could expose the same HTTP contract using a different implementation. <a href="#rest-stacks" data-stack-link="compare">See this API in each stack →</a></p>
       <p>For a shared production service, plan durable storage, authentication and authorization, HTTPS, configuration, logging, and a deployment process. The learning server’s local address and in-memory state are deliberate shortcuts for this exercise.</p>
       ${checkpoint('You can demonstrate the API and explain one limitation, one failure case, and one next improvement.')}
       <p><a href="#workshop">Connect a React app in the Coding Workshop →</a> &nbsp; <a href="#coding">Continue with coding questions →</a> &nbsp; <a href="#systemforge">Explore the system-design diagrams →</a></p>` }
@@ -167,7 +171,7 @@ npm.cmd run dev`
         <li><h4>Test it from a second window</h4><p>Open <strong>PowerShell window B</strong> and run each command:</p>${code('health','PowerShell B · health check')}${code('tasks','PowerShell B · list tasks')}<p>You should see <code>ok</code> under <code>status</code>, then one starter task, <em>Practice REST requests</em>. Your REST server is ready.</p></li>
       </ol>
       <p class="rest-copy-status" id="workshop-rest-copy-status" role="status" aria-live="polite"></p>
-      <div class="rest-quick-actions"><button class="primary-button" type="button" data-rest-continue>Server running · open Guided projects →</button><a href="#windows-rest" data-rest-open-step="4">Practice full CRUD requests →</a><a href="#windows-rest" data-rest-open-step="5">Fix a Windows error →</a></div>
+      <div class="rest-quick-actions"><button class="primary-button" type="button" data-rest-continue>Server running · open Guided projects →</button><a href="#windows-rest" data-rest-open-step="4">Practice full CRUD requests →</a><a href="#windows-rest" data-rest-open-step="5">Fix a Windows error →</a><a href="#rest-stacks" data-stack-link="compare">See this API in other stacks →</a></div>
       <details class="rest-quick-return"><summary>Coming back another day? Restart the server</summary><p>Open your project folder in File Explorer, type <code>powershell</code> in the address bar, and run <code>npm.cmd run dev</code>. If you used Option B, this works from any PowerShell window:</p>${code('restart','PowerShell A · return to the lab (Option B folder)')}</details>`;
     quick.addEventListener('click', async event => {
       const guideLink = event.target.closest('[data-rest-open-step]');
