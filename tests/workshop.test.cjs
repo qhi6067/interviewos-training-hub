@@ -83,9 +83,9 @@ test('all SQL solutions query the real seeded SQLite database', async () => {
   }
 });
 
-test('five practice areas and 26 unique exercises stay reachable', () => {
-  assert.equal(data.areas.length, 5); assert.equal(data.exercises.length, 26);
-  assert.equal(new Set(data.exercises.map(q => q.id)).size, 26);
+test('six practice areas and 38 unique exercises stay reachable', () => {
+  assert.equal(data.areas.length, 6); assert.equal(data.exercises.length, 38);
+  assert.equal(new Set(data.exercises.map(q => q.id)).size, 38);
   for (const q of data.exercises) {
     assert.ok(data.areas.some(a => a.id === q.area));
     assert.ok(q.starter && q.solution && q.prompt && q.lesson);
