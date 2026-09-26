@@ -3,3 +3,5 @@ interviewos-hub-deploy.tar.gz
 
 .vercel
 graphify-out/
+examples/react-task-manager/node_modules/
+examples/react-task-manager/dist/

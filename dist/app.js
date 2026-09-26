@@ -56,7 +56,7 @@
     modeTabs.forEach((tab) => { const active = tab.dataset.mode === mode; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; });
     views.forEach((view) => { view.hidden = view.dataset.view !== mode; });
     if (writeHistory) history.replaceState(null, '', '#' + (mode === 'deck' ? document.querySelector('.lab-tab.is-active').dataset.lab : mode));
-    progressCopy.textContent = mode === 'deck' ? 'Practicing in ' + stageName.textContent : { coding: 'Practicing coding & AI', progress: 'Reviewing your progress', capstone: 'Practicing the full integration', interview: 'Practicing interview answers', 'windows-rest': 'Building a REST server on Windows' }[mode];
+    progressCopy.textContent = mode === 'deck' ? 'Practicing in ' + stageName.textContent : { coding: 'Practicing coding & AI', progress: 'Reviewing your progress', capstone: 'Practicing the full integration', interview: 'Practicing interview answers', 'windows-rest': 'Building a REST server on Windows', workshop: 'Running code in the Coding Workshop' }[mode];
     if (mode === 'progress') { renderDashboard(); checkHealth(); }
     if (mode === 'capstone') updateCapstonePhrase();
     if (mode === 'interview') { renderPromptPicker(); loadInterviewAnswer(); }

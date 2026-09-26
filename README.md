@@ -29,7 +29,7 @@ The standalone source is in the sibling `systemforge/dist` project. After editin
 - **Coding & AI** — 30 guided exercises across JavaScript, TypeScript, Python, React, Next.js App Router, and AI integrations. Each has an explanation, code or architecture prompt, auto-graded knowledge check, hint, worked answer, follow-up question, and self-review criteria. The Progress tab recommends missed questions first.
 - **Windows REST** — seven beginner steps for installing Node.js LTS, setting up Express 5, saving and running a downloadable server, testing CRUD with PowerShell, troubleshooting Windows errors, and explaining the design in an interview. Available at `/#windows-rest` and from the lab deck.
 
-Use `1`–`3` to switch labs and `Alt+1`–`6` to switch practice modes. Arrow keys navigate the main tab bar. Link directly to coding practice with `/#coding`.
+Use `1`–`3` to switch labs and `Alt+1`–`7` to switch practice modes. Arrow keys navigate the main tab bar. Link directly to coding practice with `/#coding`, or executable exercises with `/#workshop`.
 
 Coding drafts and progress use the separate `interviewos-coding-v1` localStorage key. Existing lab progress is preserved. Storage is specific to a browser and website origin: localhost and the published site do not sync. Written answers are self-reviewed; the scratchpad does not execute code or use an AI grader. No API key is required. “Reset lab progress” leaves coding practice intact.
 
@@ -55,3 +55,22 @@ The test covers CRUD, response status/body/Location, input validation, missing r
 ## GitHub deployment
 
 Vercel's `interviewos-hub` project is connected to `qhi6067/interviewos-training-hub`; pushes to `main` trigger production deployments using the `dist` output directory in `vercel.json`. For this private repository on the Hobby plan, commit authors must resolve to the connected owner account. Use a GitHub-associated email (including its privacy-preserving noreply address), not a placeholder local email.
+
+## Coding Workshop
+
+The seventh tab at `/#workshop` adds 26 executable exercises: 10 JavaScript/Python fundamentals, five debugging drills, three React project milestones, five SQL queries, and three AI-style code reviews. Each provides starter code, progressive hints, a worked solution, and expected/actual test feedback. Drafts and passes live in `interviewos-workshop-v1`, separately from previous lab progress. Editing code invalidates its pass; a late result cannot grade a newer draft. AI reviews additionally require a written explanation and self-review checklist. No live AI grading or API key is used.
+
+The runner uses an opaque-origin `sandbox="allow-scripts"` iframe, then a disposable worker for each run. Code cannot access the hub DOM or storage. Execution is limited to five seconds after runtime loading; Stop terminates the worker. The frame CSP restricts network access to jsDelivr for runtimes. JavaScript fetch exercises receive deterministic local fixtures. Python uses pinned Pyodide 0.27.7 (classic worker compatibility); SQL uses sql.js 1.14.2's asm.js SQLite build for embedded browser compatibility. Python/SQL need internet access for runtime downloads, allowed up to 90 seconds. Every SQL run creates fresh seed data. Result previews cap tables/rows/columns; tests are examples, not a proof of correctness or a secure examination system.
+
+The downloadable React task manager is authored in `examples/react-task-manager`. It uses React 19.3.0 and Vite 8.3.1, with a lockfile. Its three intentionally incomplete helpers match the browser project exercises. Users test helpers in the workshop and run the full React UI on Windows, forwarding `/api` to their Windows REST server through Vite's development proxy. The API is local and unauthenticated; the Vite proxy does not exist in a static production build. Package only the allowlisted starter files with `python scripts/package-workshop.py`.
+
+Validate with:
+
+```powershell
+npm.cmd install --prefix .vercel/workshop-test sql.js@1.14.2 --no-audit --no-fund
+$env:NODE_PATH = (Resolve-Path .vercel/workshop-test/node_modules).Path
+node --test tests/workshop.test.cjs
+Remove-Item Env:NODE_PATH
+```
+
+These tests execute the actual JavaScript worker harness, Python solutions via local Python, and real SQLite queries; they also check grading, stale results, and persistence. Browser checks cover runtime loading, cancellation/timeouts, result rendering, and responsive layout. Runtime references: [Pyodide workers](https://pyodide.org/en/0.27.7/usage/webworker.html), [sql.js](https://sql.js.org/documentation/), [React from scratch](https://react.dev/learn/build-a-react-app-from-scratch), and [Vite](https://vite.dev/guide/).

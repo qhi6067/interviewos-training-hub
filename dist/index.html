@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="coding.css" />
     <link rel="stylesheet" href="windows-rest.css" />
+    <link rel="stylesheet" href="workshop.css" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -44,6 +45,7 @@
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-interview" data-mode="interview"><span>04</span><strong>Interview room</strong><small>Practice answers out loud</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-coding" data-mode="coding"><span>05</span><strong>Coding &amp; AI</strong><small>30 questions · 6 skill tracks</small></button>
         <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-windows-rest" data-mode="windows-rest"><span>06</span><strong>Windows REST</strong><small>Build your first real server</small></button>
+        <button class="mode-tab" role="tab" aria-selected="false" aria-controls="view-workshop" data-mode="workshop"><span>07</span><strong>Coding Workshop</strong><small>Run · debug · build · query · review</small></button>
       </nav>
 
       <section class="practice-view" id="view-deck" data-view="deck">
@@ -115,6 +117,7 @@
           <aside class="panel-card next-card"><div class="section-kicker">RECOMMENDED NEXT</div><h3 id="next-lesson-title">Start with Flightlab</h3><p id="next-lesson-copy">Start telemetry, follow one message, then explain what the C2 subscriber needs.</p><button class="primary-button" id="next-lesson-button" type="button">Open next lesson →</button><div class="weak-topics"><span class="section-kicker">WEAK TOPICS</span><div id="weak-topics-list"><span class="topic-pill">WebSockets</span><span class="topic-pill">Retries</span><span class="topic-pill">Estimates</span></div></div></aside>
         </div>
         <article class="panel-card coding-dashboard"><div><div class="section-kicker">CODING &amp; AI PRACTICE</div><h3 id="coding-dashboard-stats">0 of 30 practiced</h3><p id="coding-dashboard-next"></p><p id="coding-dashboard-topics"></p></div><button class="primary-button" id="coding-dashboard-open" type="button">Continue coding practice →</button></article>
+        <article class="panel-card coding-dashboard"><div><div class="section-kicker">HANDS-ON CODING</div><h3 id="workshop-dashboard-stats">0 of 26 passing</h3><p id="workshop-dashboard-next">Run real code, debug a failure, or query a database.</p></div><a class="primary-button" href="#workshop">Open Coding Workshop →</a></article>
         <article class="panel-card health-card"><div class="panel-card-head"><div><div class="section-kicker">LOCAL RUNTIME</div><h3>Lab health checks</h3></div><button class="quiet-button" id="refresh-health" type="button">Refresh now</button></div><p class="health-note" id="health-note">Checking local ports…</p><div class="health-grid" id="health-grid"></div></article>
       </section>
 
@@ -135,6 +138,7 @@
       </section>
 
       <section class="practice-view" id="view-coding" data-view="coding" hidden>
+        <a class="rest-guide-link" href="#workshop">Ready to execute code? Open the Coding Workshop →</a>
         <div class="view-heading coding-heading"><div><div class="section-kicker">YOUR NEXT INTERVIEW · ONE QUESTION AT A TIME</div><h2>Think it through. Build it. Explain it.</h2><p>Beginner-friendly coding and AI practice. Start with a concept, check your reasoning, then write and review your answer.</p></div><span class="coding-badge">30 guided questions</span></div>
         <div class="coding-overview"><div><strong id="coding-completed">0 / 30</strong><span>self-reviewed practice</span></div><div><strong id="coding-passed">0</strong><span>knowledge checks passed</span></div><div><strong id="coding-review">0</strong><span>questions to review</span></div><p>Start anywhere. JavaScript and Python build the foundation; React and Next.js apply it. AI connects the ideas to intelligent features.</p></div>
         <div class="coding-tracks" id="coding-tracks" role="group" aria-label="Choose a skill track"></div>
@@ -148,6 +152,15 @@
         <div id="windows-rest-guide"></div>
       </section>
 
+      <section class="practice-view" id="view-workshop" data-view="workshop" hidden>
+        <div class="view-heading"><div><div class="section-kicker">LEARN BY DOING · BEGINNER FRIENDLY</div><h2>Small functions.<br />Real feedback.</h2><p>Write code, see what happens, and explain your choices. Five practice areas take you from your first return statement to reviewing AI-generated code.</p></div><span class="coding-badge">26 hands-on exercises</span></div>
+        <div class="workshop-overview"><div><strong id="workshop-passed">0 / 26</strong><span>exercises passing</span></div><div><strong id="workshop-reviewed">0 / 3</strong><span>code reviews completed</span></div><p>Start with Run &amp; Test. Read the brief → edit the code → run tests → compare actual and expected results. Hints are always available.</p></div>
+        <div id="workshop-areas" class="workshop-areas" role="group" aria-label="Workshop practice areas"></div>
+        <p id="workshop-area-description" class="workshop-description"></p>
+        <div class="workshop-layout"><aside class="panel-card workshop-sidebar"><label for="workshop-language">Language</label><select id="workshop-language"><option value="all">All languages</option><option value="javascript">JavaScript</option><option value="python">Python</option><option value="sql">SQL</option></select><nav id="workshop-exercises" aria-label="Workshop exercises"></nav><p>Progress and drafts save in this browser. Editing a passed answer clears its pass until you run it again.</p></aside><article class="panel-card workshop-bench" id="workshop-exercise" aria-label="Selected workshop exercise"></article></div>
+        <p id="workshop-storage" class="coding-storage-note" role="status"></p>
+      </section>
+
       <footer><span>INTERVIEWOS</span><span>Made for your interview prep</span><span>TRAINING HUB · <span id="footer-mode">READY</span></span></footer>
     </main>
     <script src="coding-data.js"></script>
@@ -155,5 +168,9 @@
     <script src="coding.js"></script>
     <script src="app.js"></script>
     <script src="windows-rest.js"></script>
+    <script src="workshop-data.js"></script>
+    <script src="workshop-core.js"></script>
+    <script src="workshop-runner.js"></script>
+    <script src="workshop.js"></script>
   </body>
 </html>
