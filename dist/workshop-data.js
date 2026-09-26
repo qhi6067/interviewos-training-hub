@@ -4,7 +4,7 @@
   const areas=[
     {id:'run',title:'Run & Test',description:'Build a function, run it, and compare real results. Start with JavaScript or Python.'},
     {id:'debug',title:'Debugging',description:'Run the broken starter first. Find a failing case, fix the cause, and explain the change.'},
-    {id:'projects',title:'Guided projects',description:'Complete three milestones for a React task manager, then connect the downloaded app to your Windows REST server.'},
+    {id:'projects',title:'Guided projects',description:'Complete three milestones for a React task manager, then connect the downloaded app to your Windows REST server. Set up that server with the REST quick-start above.'},
     {id:'sql',title:'SQL playground',description:'Query a fresh SQLite database of devices and API events. Inspect its tables, then solve each query.'},
     {id:'review',title:'AI code review',description:'Review deliberately flawed, AI-style sample code. Test your correction and self-review your explanation. No live AI grader is used.'}
   ];

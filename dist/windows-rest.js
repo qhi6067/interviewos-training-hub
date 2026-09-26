@@ -12,6 +12,9 @@ npm.cmd install express@5`,
     editor: 'notepad .\\server.cjs',
     start: 'node .\\server.cjs',
     health: 'Invoke-RestMethod -Uri http://127.0.0.1:3001/health',
+    tasks: 'Invoke-RestMethod -Uri http://127.0.0.1:3001/api/tasks',
+    move: `Move-Item -Path (Join-Path $HOME 'Downloads\\server.cjs') -Destination .
+Get-ChildItem`,
     requests: `$baseUri = 'http://127.0.0.1:3001'
 
 # READ: list tasks (200 OK)
@@ -112,7 +115,7 @@ node .\\server.cjs`
       <h4>Where the frameworks fit</h4><p><strong>JavaScript</strong> is the language, <strong>Node.js</strong> runs it on the server, and <strong>Express</strong> provides routing and middleware. <strong>React</strong> would build the interface. <strong>Next.js</strong> can combine a React interface with server routes. A <strong>Java / Spring Boot</strong> service could expose the same HTTP contract using a different implementation.</p>
       <p>For a shared production service, plan durable storage, authentication and authorization, HTTPS, configuration, logging, and a deployment process. The learning server’s local address and in-memory state are deliberate shortcuts for this exercise.</p>
       ${checkpoint('You can demonstrate the API and explain one limitation, one failure case, and one next improvement.')}
-      <p><a href="#coding">Continue with coding questions →</a> &nbsp; <a href="#systemforge">Explore the system-design diagrams →</a></p>` }
+      <p><a href="#workshop">Connect a React app in the Coding Workshop →</a> &nbsp; <a href="#coding">Continue with coding questions →</a> &nbsp; <a href="#systemforge">Explore the system-design diagrams →</a></p>` }
   ];
   root.innerHTML = `<div class="rest-setup-layout"><aside class="panel-card rest-setup-nav"><div class="section-kicker">YOUR SETUP PATH</div><p>Seven small steps. Copy commands into PowerShell; copy JavaScript into the server file.</p><nav class="rest-step-links" aria-label="Windows REST setup steps">${steps.map((s,i)=>`<button type="button" data-rest-step="${i}" ${i===0?'aria-current="step"':''}><span>${String(i+1).padStart(2,'0')}</span>${s.name}</button>`).join('')}</nav></aside><article class="panel-card rest-setup-card" id="rest-step-content" aria-labelledby="rest-step-title"></article></div>`;
   function render(focus = false) {
@@ -121,17 +124,50 @@ node .\\server.cjs`
     document.getElementById('rest-step-content').innerHTML = `<div class="section-kicker">STEP ${selected+1} OF ${steps.length}</div><h3 id="rest-step-title" tabindex="-1">${step.title}</h3>${step.body()}<p class="rest-copy-status" id="rest-copy-status" role="status" aria-live="polite"></p><div class="rest-setup-actions"><button class="secondary-button" type="button" data-rest-move="-1" ${selected===0?'disabled':''}>← Previous step</button><button class="primary-button" type="button" data-rest-move="1" ${selected===steps.length-1?'disabled':''}>Next step →</button></div>`;
     if(focus) { document.getElementById('rest-step-title').focus({preventScroll:true}); document.getElementById('rest-step-content').scrollIntoView({block:'start',behavior:'smooth'}); }
   }
+  async function copyCommand(id, status) {
+    try { await navigator.clipboard.writeText(commands[id]); status.textContent='Copied. Paste into '+(id==='server'?'Notepad, then save server.cjs.':'PowerShell on your Windows computer.'); }
+    catch (_) { status.textContent='Clipboard access is unavailable. Select the code in the box and copy it manually with Ctrl+C.'; }
+  }
   root.addEventListener('click', async event => {
     const step = event.target.closest('[data-rest-step]');
     const move = event.target.closest('[data-rest-move]');
     if(step || move) { selected = step ? Number(step.dataset.restStep) : Math.max(0,Math.min(steps.length-1,selected+Number(move.dataset.restMove))); render(true); }
     const copy = event.target.closest('[data-rest-copy]');
-    if(copy) {
-      try { await navigator.clipboard.writeText(commands[copy.dataset.restCopy]); document.getElementById('rest-copy-status').textContent='Copied. Paste into '+(copy.dataset.restCopy==='server'?'Notepad, then save server.cjs.':'PowerShell on your Windows computer.'); }
-      catch (_) { document.getElementById('rest-copy-status').textContent='Clipboard access is unavailable. Select the code in the box and copy it manually with Ctrl+C.'; }
-    }
+    if(copy) await copyCommand(copy.dataset.restCopy, document.getElementById('rest-copy-status'));
   });
   render();
+
+  // Coding Workshop quick-start: the same commands, condensed to reach a running server quickly.
+  const setup = document.getElementById('workshop-rest-setup'), quick = document.getElementById('workshop-rest-quickstart');
+  if (setup && quick) {
+    const setupKey = 'interviewos-rest-setup';
+    try { if (localStorage.getItem(setupKey) === 'closed') setup.open = false; } catch (_) {}
+    setup.addEventListener('toggle', () => { try { localStorage.setItem(setupKey, setup.open ? 'open' : 'closed'); } catch (_) {} });
+    quick.innerHTML = `
+      <p>The Guided projects React app sends real HTTP requests to a small Express API on your PC. Set it up once in PowerShell. The server listens only on <strong>127.0.0.1:3001</strong> (this computer), has no login, and keeps tasks in memory, so they reset when it restarts.</p>
+      <div class="rest-quick-downloads"><a class="primary-button" href="${sourcePath}" download="server.cjs">Download server.cjs starter ↓</a><a class="secondary-button" href="downloads/react-task-manager.zip" download>Download React task manager (.zip) ↓</a></div>
+      <ol class="rest-quick-steps">
+        <li><h4>Install Node.js LTS</h4><p>Get the <strong>LTS</strong> Windows installer from the <a href="https://nodejs.org/en/download" target="_blank" rel="noopener noreferrer">official Node.js download page ↗</a> and keep its default options. Close and reopen PowerShell, then check that both commands print a version:</p>${code('versions','PowerShell · check your tools')}</li>
+        <li><h4>Create the project and install Express</h4><p>In <strong>PowerShell window A</strong>, paste this block. It creates <code>Documents\\InterviewOS\\windows-rest-lab</code> and installs Express 5 there. Installation needs internet access.</p>${code('project','PowerShell A · create the project')}<p>Type <code>npm.cmd</code>, not <code>npm</code>. It avoids the “npm.ps1 cannot be loaded” error without changing your execution policy.</p></li>
+        <li><h4>Add the starter server</h4><p><a href="${sourcePath}" download="server.cjs">Download server.cjs</a>, then, still in window A, move it from Downloads into the project folder:</p>${code('move','PowerShell A · move the starter into the project')}<p>The list should show <code>server.cjs</code>, <code>package.json</code>, and <code>node_modules</code>. If your browser saved the file elsewhere or named it <code>server (1).cjs</code>, drag it into the folder in File Explorer and rename it to <code>server.cjs</code>.</p></li>
+        <li><h4>Start the server</h4>${code('start','PowerShell A · start the server')}<p>Expect <code>REST practice server: http://127.0.0.1:3001</code>. Leave window A open while you practice; press <strong>Ctrl+C</strong> there to stop the server.</p></li>
+        <li><h4>Test it from a second window</h4><p>Open <strong>PowerShell window B</strong> and run each command:</p>${code('health','PowerShell B · health check')}${code('tasks','PowerShell B · list tasks')}<p>You should see <code>ok</code> under <code>status</code>, then one starter task, <em>Practice REST requests</em>. Your REST server is ready.</p></li>
+      </ol>
+      <p class="rest-copy-status" id="workshop-rest-copy-status" role="status" aria-live="polite"></p>
+      <div class="rest-quick-actions"><button class="primary-button" type="button" data-rest-continue>Server running · open Guided projects →</button><a href="#windows-rest" data-rest-open-step="4">Practice full CRUD requests →</a><a href="#windows-rest" data-rest-open-step="5">Fix a Windows error →</a></div>
+      <details class="rest-quick-return"><summary>Coming back another day? Restart the server</summary>${code('restart','PowerShell A · return to the lab')}</details>`;
+    quick.addEventListener('click', async event => {
+      const guideLink = event.target.closest('[data-rest-open-step]');
+      if (guideLink) { selected = Number(guideLink.dataset.restOpenStep); render(); }
+      if (event.target.closest('[data-rest-continue]')) {
+        setup.open = false;
+        document.querySelector('#workshop-areas [data-area="projects"]')?.click();
+        document.getElementById('workshop-areas').scrollIntoView({block:'start',behavior:'smooth'});
+      }
+      const copy = event.target.closest('[data-rest-copy]');
+      if (copy) await copyCommand(copy.dataset.restCopy, document.getElementById('workshop-rest-copy-status'));
+    });
+  }
   fetch(sourcePath).then(response=>{if(!response.ok)throw new Error('Server example unavailable');return response.text();}).then(text=>{
     if(!text.includes('function createApp()'))throw new Error('Invalid server example');
     commands.server=text;serverLoaded=true;
